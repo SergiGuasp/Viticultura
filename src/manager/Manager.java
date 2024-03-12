@@ -44,6 +44,7 @@ public class Manager {
 		getEntrada();
 		manageActions();
 		showAllCampos();
+		showCantidadVidByBodega();
 		session.close();
 	}
 
@@ -134,6 +135,22 @@ public class Manager {
 		}
 		tx.commit();
 	}
+	
+	private void showCantidadVidByBodega() {
+        tx = session.beginTransaction();
+        Query q = session.createQuery("select b, sum(v.cantidad) " +
+                "from Bodega b " +
+                "inner join b.vids v " +
+                "group by b");
+        List<Object[]> resultList = q.list();
+        for (Object[] result : resultList) {
+            Bodega bodega = (Bodega) result[0];
+            Long cantidadVid = (Long) result[1];
+            System.out.println("Bodega: " + bodega.getNombre() + ", Cantidad de Vid: " + cantidadVid);
+        }
+        tx.commit();
+    }
+
 
 	
 }

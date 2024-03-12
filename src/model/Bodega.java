@@ -29,6 +29,26 @@ public class Bodega {
     @JoinColumn(name = "bodega_id")
 	private List<Vid> vids;
 	
+	public int getId_bodega() {
+		return id_bodega;
+	}
+
+	public void setId_bodega(int id_bodega) {
+		this.id_bodega = id_bodega;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setVids(List<Vid> vids) {
+		this.vids = vids;
+	}
+
 	public Bodega() {}
 	
 	public Bodega(String nombre) {
