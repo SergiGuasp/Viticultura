@@ -1,4 +1,5 @@
 package manager;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,16 +88,49 @@ public class Manager {
 	}
 
 	private void addVid(String[] split) {
-		Vid v = new Vid(TipoVid.valueOf(split[1].toUpperCase()), Integer.parseInt(split[2]));
-		tx = session.beginTransaction();
-		session.save(v);
-		
-		c.addVid(v);
-		session.save(c);
-		
-		tx.commit();
-		
+	    // Crear una nueva vid con los datos proporcionados
+	    Vid v = new Vid(TipoVid.valueOf(split[1].toUpperCase()), Integer.parseInt(split[2]));
+
+	    // Obtener el precio de la instrucción, si está presente
+	    double price = 3.0; // Valor predeterminado para indicar que no se proporcionó un precio válido
+	    if (split.length > 3) {
+	        try {
+	            price = Double.parseDouble(split[3]);
+	            System.out.println("Precio asignado a la vid: " + price);
+	        } catch (NumberFormatException e) {
+	            System.out.println("El precio proporcionado no es válido.");
+	        }
+	    } else {
+	        System.out.println("No se proporcionó un precio para la vid.");
+	    }
+
+	    // Si el precio es -1.0, se mostrará un mensaje indicando que no se proporcionó un precio válido
+	    if (price == -1.0) {
+	        System.out.println("Advertencia: No se proporcionó un precio válido para la vid.");
+	    }
+
+	    // Asignar el precio a la vid
+	    v.setPrice(price);
+
+	    // Iniciar una transacción Hibernate
+	    tx = session.beginTransaction();
+
+	    // Guardar la nueva vid en la base de datos
+	    session.save(v);
+
+	    // Asociar la vid al campo actual
+	    c.addVid(v);
+	    session.save(c);
+
+	    // Confirmar la transacción
+	    tx.commit();
 	}
+
+
+
+
+
+
 
 	private void addCampo(String[] split) {
 		c = new Campo(b);
@@ -154,3 +188,4 @@ public class Manager {
 
 	
 }
+	
