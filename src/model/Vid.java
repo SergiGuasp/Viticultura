@@ -27,9 +27,10 @@ public class Vid {
 	
 	public Vid() {}
 		
-	public Vid(TipoVid vid, int cantidad) {
+	public Vid(TipoVid vid, int cantidad, double price) {
 		this.vid = vid;
 		this.cantidad = cantidad;
+		this.price = price;
 	}
 	public int getId() {
 		return this.id;

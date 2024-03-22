@@ -1,5 +1,5 @@
 package manager;
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +17,8 @@ import model.Vid;
 import utils.TipoVid;
 
 public class Manager {
+	private ArrayList<Vid> videsVendimia = new ArrayList<>();
+
 	private static Manager manager;
 	private ArrayList<Entrada> entradas;
 	private Session session;
@@ -79,38 +81,29 @@ public class Manager {
 	}
 
 	private void vendimia() {
-		this.b.getVids().addAll(this.c.getVids());
-		
-		tx = session.beginTransaction();
-		session.save(b);
-		
-		tx.commit();
+	    // Crear un nuevo ArrayList para almacenar temporalmente las vides recolectadas durante la vendimia
+	    ArrayList<Vid> videsRecolectadas = new ArrayList<>();
+	    
+	    // Agregar las vides del campo actual al ArrayList
+	    videsRecolectadas.addAll(this.c.getVids());
+	    
+	    // Agregar las vides del campo a la bodega
+	    this.b.getVids().addAll(this.c.getVids());
+	    
+	    // Guardar cada vid recolectada durante la vendimia en la base de datos
+	    tx = session.beginTransaction();
+	    for (Vid vid : videsRecolectadas) {
+	        session.saveOrUpdate(vid);
+	    }
+	    session.saveOrUpdate(b); // Guardar la bodega con las nuevas vides
+	    tx.commit();
 	}
+
+
 
 	private void addVid(String[] split) {
 	    // Crear una nueva vid con los datos proporcionados
-	    Vid v = new Vid(TipoVid.valueOf(split[1].toUpperCase()), Integer.parseInt(split[2]));
-
-	    // Obtener el precio de la instrucción, si está presente
-	    double price = 3.0; // Valor predeterminado para indicar que no se proporcionó un precio válido
-	    if (split.length > 3) {
-	        try {
-	            price = Double.parseDouble(split[3]);
-	            System.out.println("Precio asignado a la vid: " + price);
-	        } catch (NumberFormatException e) {
-	            System.out.println("El precio proporcionado no es válido.");
-	        }
-	    } else {
-	        System.out.println("No se proporcionó un precio para la vid.");
-	    }
-
-	    // Si el precio es -1.0, se mostrará un mensaje indicando que no se proporcionó un precio válido
-	    if (price == -1.0) {
-	        System.out.println("Advertencia: No se proporcionó un precio válido para la vid.");
-	    }
-
-	    // Asignar el precio a la vid
-	    v.setPrice(price);
+	    Vid v = new Vid(TipoVid.valueOf(split[1].toUpperCase()), Integer.parseInt(split[2]),Double.parseDouble(split[3]));
 
 	    // Iniciar una transacción Hibernate
 	    tx = session.beginTransaction();
@@ -184,8 +177,5 @@ public class Manager {
         }
         tx.commit();
     }
-
-
-	
 }
 	
