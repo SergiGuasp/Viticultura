@@ -1,6 +1,6 @@
 package model;
 
-import java.math.BigDecimal;
+
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +47,18 @@ public class Vid {
 	}
 	
 	
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setVid(TipoVid vid) {
+		this.vid = vid;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
 	public void setPrice(double price2) {
 		this.price = price2;
 	}
